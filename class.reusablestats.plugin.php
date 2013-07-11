@@ -74,9 +74,11 @@ class ReusableStatsPlugin extends Gdn_Plugin {
   }
 
   public function PluginController_ReusableStatsJSON_Create($Sender) {
-    $Sender->DeliveryMethod(DELIVERY_METHOD_JSON);
-    $Sender->DeliveryType(DELIVERY_TYPE_DATA);
-    $Sender->Render();
+    if(C('Plugins.ReusableStats.JsonStat', '0') == true) {
+      $Sender->DeliveryMethod(DELIVERY_METHOD_JSON);
+      $Sender->DeliveryType(DELIVERY_TYPE_DATA);
+      $Sender->Render();
+    }
   }
 
   private function MembersCount(){
