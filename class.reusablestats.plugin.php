@@ -19,8 +19,8 @@ along with ReusableStats. If not, see <http://www.gnu.org/licenses/>.
 
 // Define the plugin:
 $PluginInfo['Reusable Stats'] = array(
-   'Description' => 'Expose additiona smarty tag to get forum stats. Moreover add a special url to provide this data in json (enabled via configuration).',
-   'Version' => '0.1',
+   'Description' => 'Expose additiona smarty tag to get forum stats. Moreover add a special url to provide this data in json (enabled via configuration). Provide additional stats if you are using WhoisOnline plugin.',
+   'Version' => '0.2',
    'RequiredApplications' => array('Vanilla' => '2.0.18'),
    'RequiredTheme' => FALSE, 
    'RequiredPlugins' => FALSE,
@@ -42,12 +42,27 @@ class ReusableStatsPlugin extends Gdn_Plugin {
     $Sender->SetData('posts', $this->CommentsCount());
     $Sender->SetData('members', $this->MembersCount());
     $Sender->SetData('role_members', $this->MembersPerRole());
-    /*HOWTO use these vars in your theme tpl file? Just add this code to your file!
+    if(C('EnabledPlugins.WhosOnline')){
+      $Sender->SetData('role_members_online', $this->MembersOnlinePerRole());
+    }
+
+    /*
+
+    HOWTO use these vars in your theme tpl file? Just add this code to your file!
 
     Threads: {$threads} |
     Posts: {$posts} |
     Members: {$members} |
     RoleMembers: {$role_members.PDI}
+    RoleMembersOnline: {$role_members_online.PDI}
+
+    HOWTO use these vars in your theme php file?
+
+    $this->Data['threads'];
+    $this->Data['posts'];
+    $this->Data['members'];
+    $this->Data['role_members']['PDI'];//vanilla role name, case sensitive
+    $this->Data['role_members_online']['PDI'];//vanilla role name, case sensitive
 
     */
   }
@@ -102,8 +117,33 @@ class ReusableStatsPlugin extends Gdn_Plugin {
     foreach ($RoleModel->GetArray() as $RoleID => $RoleName) {
       $RolesCount[$RoleName] = $this->RoleMembers($RoleID);
     }
-    //var_dump($RolesCount);
     return $RolesCount;
+  }
+
+  private function MembersOnlinePerRole() {
+    $Frequency = C('WhosOnline.Frequency', 4);
+    $History = time() - $Frequency;
+    $OnlineRolesCount = array();
+    $Online = Gdn::SQL()->Select('r.Name')
+              ->Select('u.userID', 'count', 'CountUsers')
+              ->From('Whosonline w')
+              ->Join('User u', 'w.UserID = u.UserID')
+              ->Join('UserRole ur', 'u.UserID = ur.UserID')
+              ->Join('Role r', 'ur.RoleID = r.RoleID')
+              ->Where('w.Timestamp >=', date('Y-m-d H:i:s', $History))
+              ->GroupBy('r.Name')
+              ->Get()->Result();
+    foreach ($Online as $OnlinePerRole) {
+      $OnlineRolesCount[$OnlinePerRole->Name] = $OnlinePerRole->CountUsers;
+    }
+    //fill eventually empty roles
+    $RoleModel = new RoleModel();
+    foreach ($RoleModel->GetArray() as $RoleID => $RoleName) {
+      if(!$OnlineRolesCount[$RoleName]) {
+        $OnlineRolesCount[$RoleName] = "0";
+      }
+    }
+    return $OnlineRolesCount;
   }
 
   private function RoleMembers($RoleID){
@@ -118,11 +158,15 @@ class ReusableStatsPlugin extends Gdn_Plugin {
   }
   
   public function Setup() {
-    Gdn::Router()->SetRoute('jsonstat', '/plugin/ReusableStatsJSON', 'Internal');
+    if(!Gdn::Router()->MatchRoute('jsonstat'))  {
+      Gdn::Router()->SetRoute('jsonstat', '/plugin/ReusableStatsJSON', 'Internal');
+    }
   }
   
   public function OnDisable() {
-    Gdn::Router()->DeleteRoute('jsonstat');
+    if(Gdn::Router()->MatchRoute('jsonstat')) {
+      Gdn::Router()->DeleteRoute('jsonstat');
+    }
   }
    
 }
