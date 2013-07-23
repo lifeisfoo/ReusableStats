@@ -18,9 +18,9 @@ along with ReusableStats. If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Define the plugin:
-$PluginInfo['Reusable Stats'] = array(
+$PluginInfo['ReusableStats'] = array(
    'Description' => 'Expose additiona smarty tag to get forum stats. Moreover add a special url to provide this data in json (enabled via configuration). Provide additional stats if you are using WhoisOnline plugin.',
-   'Version' => '0.2',
+   'Version' => '0.2.1',
    'RequiredApplications' => array('Vanilla' => '2.0.18'),
    'RequiredTheme' => FALSE, 
    'RequiredPlugins' => FALSE,
