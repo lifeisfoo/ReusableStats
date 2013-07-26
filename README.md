@@ -3,12 +3,22 @@ Expose additional smarty tags to get forum stats. Moreover add a special url to 
 
 Requires Vanilla >= 2.0.18
 
-## Howto use in your theme
+## Howto use in your theme tpl files
 ```
 Threads: {$threads} 
-Posts: {$posts}
-Members: {$members}
-RoleMembers: {$role_members.ROLE_NAME} (case sensitive)
+Posts: {$posts} <-- total posts count
+Members: {$members} <-- total members count
+RoleMembers: {$role_members.ROLE_NAME} (case sensitive) <-- total count of users in a role
+RoleMembersOnline: {$role_members_online.ROLE_NAME} (case sensitive) <-- total count of users in a role that are online (Requires WhoisOnline pluigin)
+```
+
+### Using in theme's php files
+```php
+<?php echo $this->Data['threads']; ?>
+<?php echo $this->Data['posts']; ?>
+<?php echo $this->Data['members']; ?>
+<?php echo $this->Data['role_members']['ROLE_NAME']; ?>
+<?php echo $this->Data['role_members_online']['ROLE_NAME']; ?>
 ```
 
 ## Stats via Json 
