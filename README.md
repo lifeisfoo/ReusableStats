@@ -1,5 +1,5 @@
 # Reusable Stats plugin for Vanilla Forums
-Expose additiona smarty tag to get forum stats. Moreover add a special url to provide this data in json (enabled via configuration).
+Expose additional smarty tags to get forum stats. Moreover add a special url to provide these data in json (enabled via configuration).
 
 Requires Vanilla >= 2.0.18
 
@@ -13,7 +13,7 @@ RoleMembers: {$role_members.ROLE_NAME} (case sensitive)
 
 ## Stats via Json 
 If enabled (via plugin's settings page), a special url http://example.com/forum/jsonstat is exposed to provide
-this stats in json format (e.g. grab them with jquery to show forum stats on your blog header...).
+these stats in json format (e.g. grab them with jquery to show forum stats on your blog header...).
 
 ## Sponsor
 Thanks to [johnnyzen](http://vanillaforums.org/profile/43062/johnnyzen) for making this happen.
