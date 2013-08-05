@@ -20,7 +20,7 @@ along with ReusableStats. If not, see <http://www.gnu.org/licenses/>.
 // Define the plugin:
 $PluginInfo['ReusableStats'] = array(
    'Description' => 'Expose additiona smarty tag to get forum stats. Moreover add a special url to provide this data in json (enabled via configuration). Provide additional stats if you are using WhoisOnline plugin.',
-   'Version' => '0.2.1',
+   'Version' => '0.2.2',
    'RequiredApplications' => array('Vanilla' => '2.0.18'),
    'RequiredTheme' => FALSE, 
    'RequiredPlugins' => FALSE,
@@ -131,6 +131,7 @@ class ReusableStatsPlugin extends Gdn_Plugin {
               ->Join('UserRole ur', 'u.UserID = ur.UserID')
               ->Join('Role r', 'ur.RoleID = r.RoleID')
               ->Where('w.Timestamp >=', date('Y-m-d H:i:s', $History))
+              ->Where('w.Invisible', 0)//only non-invisible users
               ->GroupBy('r.Name')
               ->Get()->Result();
     foreach ($Online as $OnlinePerRole) {
