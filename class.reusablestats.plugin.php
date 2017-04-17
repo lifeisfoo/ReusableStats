@@ -30,7 +30,8 @@ $PluginInfo['ReusableStats'] = array(
    'SettingsPermission' => 'Garden.AdminUser.Only',
    'Author' => "Alessandro Miliucci",
    'AuthorEmail' => 'lifeisfoo@gmail.com',
-   'AuthorUrl' => 'http://forkwait.net'
+   'AuthorUrl' => 'http://forkwait.net',
+   'License' => 'GPLv3'
 );
 
 class ReusableStatsPlugin extends Gdn_Plugin {
