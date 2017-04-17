@@ -10,6 +10,7 @@ Posts: {$posts} <-- total posts count
 Members: {$members} <-- total members count
 RoleMembers: {$role_members.ROLE_NAME} (case sensitive) <-- total count of users in a role
 RoleMembersOnline: {$role_members_online.ROLE_NAME} (case sensitive) <-- total count of users in a role that are online (Requires WhoisOnline pluigin)
+TotalViews: {$total_views}
 ```
 
 ### Using in theme's php files
@@ -19,6 +20,7 @@ RoleMembersOnline: {$role_members_online.ROLE_NAME} (case sensitive) <-- total c
 <?php echo $this->Data['members']; ?>
 <?php echo $this->Data['role_members']['ROLE_NAME']; ?>
 <?php echo $this->Data['role_members_online']['ROLE_NAME']; ?>
+<?php echo $this->Data['total_views']; ?>
 ```
 
 ## Stats via Json 
